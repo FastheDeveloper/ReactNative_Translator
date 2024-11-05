@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
 
   return new Response(
     JSON.stringify({mp3Base64}),
-    { ...corsHeaders,headers: { "Content-Type": "application/json" } },
+    { headers: { ...corsHeaders,"Content-Type": "application/json" } },
   )
 })
 
