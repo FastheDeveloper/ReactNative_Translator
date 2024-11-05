@@ -1,25 +1,51 @@
 import { FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, FlatList } from 'react-native';
 import { translate, textToSpeech, audioToText } from '~/utils/useTranslate';
 import AudioRecorder from '~/components/AudioRecorder';
+import { languages } from '~/assets/languages';
 
 export default function Home() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-
+  const [languageFrom, setLanguageFrom] = useState('English');
+  const [languageTo, setLanguageTo] = useState('Spanish');
+  const [selectLanguageMode, setSelectedLanguageMode] = useState<'from' | 'to' | null>();
+  
   const onTranslate = async () => {
-    const translation = await translate(input);
+    const translation = await translate(input,languageFrom,languageTo);
     setOutput(translation);
   };
 
   const speechToText = async (uri: string) => {
     const text = await audioToText(uri);
     setInput(text);
-    const translation = await translate(text);
+    const translation = await translate(text,languageFrom,languageTo);
     setOutput(translation);
   };
+
+  if (selectLanguageMode)
+    return (
+      <FlatList
+        className="mx-auto w-full max-w-xl flex-1"
+        data={languages}
+        renderItem={({ item }) => (
+          <Text
+            className="p-3"
+            onPress={() => {
+              if (selectLanguageMode === 'from') {
+                setLanguageFrom(item.name);
+              } else {
+                setLanguageTo(item.name);
+              }
+              setSelectedLanguageMode(null);
+            }}>
+            {item.name}
+          </Text>
+        )}
+      />
+    );
 
   return (
     <View className='max-w-xl mx-auto w-full'>
@@ -27,9 +53,12 @@ export default function Home() {
 
       {/* Language selector */}
       <View className="flex-row justify-around p-5">
-        <Text className="flex-1 text-center font-semibold color-blue-600">English</Text>
-        <FontAwesome5 name="exchange-alt" size={16} color="gray" />
-        <Text className="flex-1 text-center font-semibold color-blue-600">Spanish</Text>
+        <Text className="flex-1 text-center font-semibold color-blue-600" onPress={()=>setSelectedLanguageMode('from')}>{languageFrom}</Text>
+        <FontAwesome5 name="exchange-alt" size={16} color="gray"  onPress={()=>{
+          setLanguageFrom(languageTo)
+          setLanguageTo(languageFrom)
+        }}/>
+        <Text className="flex-1 text-center font-semibold color-blue-600"  onPress={()=>setSelectedLanguageMode('to')}>{languageTo}</Text>
       </View>
       {/* INput container */}
 

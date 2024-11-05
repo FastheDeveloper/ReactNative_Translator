@@ -3,9 +3,9 @@ import { supabase } from './supabase';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
-export const translate = async (text: string) => {
+export const translate = async (input: string,from:string,to:string) => {
   const { data, error } = await supabase.functions.invoke('translate', {
-    body: JSON.stringify({ input: text, from: 'English', to: 'Spanish' }),
+    body: JSON.stringify({ input, from, to }),
   });
   console.log(error);
   console.log(data);
