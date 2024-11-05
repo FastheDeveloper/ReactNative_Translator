@@ -22,8 +22,8 @@ export default function Home() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Home' }} />
+    <View className='max-w-xl mx-auto w-full'>
+      <Stack.Screen options={{ title: 'Translate' }} />
 
       {/* Language selector */}
       <View className="flex-row justify-around p-5">
@@ -71,6 +71,6 @@ export default function Home() {
           </View>
         </View>
       )}
-    </>
+    </View>
   );
 }
