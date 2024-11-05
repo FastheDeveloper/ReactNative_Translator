@@ -2,13 +2,26 @@ import { FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { Text, View,TextInput } from 'react-native';
+import { supabase } from '~/utils/supabase';
  
 export default function Home() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
-  const onTranslate=()=>{
-    
+const translate =async(text:string)=>{
+const {data,error} = await supabase.functions.invoke('translate',{
+	body:JSON.stringify({input:text,from:'English',to:"Spanish"})
+})
+console.log(error)
+console.log(data)
+
+return data?.content || "Something went wrong"
+}
+
+  const onTranslate=async()=>{
+	console.log("running")
+    const  translation=await translate(input)
+	setOutput(translation)
   }
   return (
     <>
